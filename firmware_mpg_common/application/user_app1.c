@@ -135,8 +135,49 @@ State Machine Function Definitions
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
-{
-
+{ 
+  static u8 u8key = 0;
+  static u32 u32counter1 = 0;
+  static u32 u32counter2 = 1;
+  static u32 u32counter3 = 1000;
+  static u32 u32counter4 = 100;
+  if(u32counter2 == 1001)//Judge speed how to change
+  {
+    u8key = 1;
+    u32counter4 = 100;
+  }
+  else if(u32counter2 == 1||u32counter4 == 1000)//Judge speed how to change
+  {
+    u8key = 0;
+    u32counter2 = 1;
+  }
+  switch(u8key)//choose speed
+  {
+     case 0:u32counter1++;
+     if(u32counter1 == u32counter2)//Control the light switch
+      HEARTBEAT_ON();
+     else if(u32counter1 == 1000)//Control switch of the lights went out
+     {
+      HEARTBEAT_OFF();
+      u32counter1 = 0;//counter return 0
+      u32counter2 += 100;//reduce the cycle
+      u32counter4 -= 1;
+     }break;
+      case 1:
+        u32counter3--;
+      
+      if(u32counter3 == 0)//Control the light switch
+      {
+        HEARTBEAT_OFF();
+        u32counter3 = 1000;
+      }
+      else if(u32counter3 == u32counter4)//Control switch of the lights went out
+      {
+        HEARTBEAT_ON();     
+        u32counter4 += 100;
+        u32counter2 -= 100;
+      }break;
+  }
 } /* end UserApp1SM_Idle() */
     
 #if 0

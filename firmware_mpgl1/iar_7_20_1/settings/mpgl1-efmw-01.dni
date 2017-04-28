@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1331767526
+Checksum=893302348
 [JLinkDriver]
 CStepIntDis=_ 0
 WatchCond=_ 0
@@ -49,9 +49,6 @@ Fmt0={W}3:UserApp_u8AdcResultCount	3	0
 LoggingEnabled=_ 0
 LogFile=_ ""
 Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
 [CallStackLog]
 Enabled=0
 [DriverProfiling]
@@ -64,8 +61,12 @@ Exclusions=
 mode=0
 [Breakpoints2]
 Bp0=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\..\firmware_mpg_common\drivers\adc12.c}.317.3" 0 0 1 "" 0 "" 0
-Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\application\main.c}.78.3" 0 0 1 "" 0 "" 0
-Count=2
+Bp1=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\application\main.c}.82.3" 0 0 1 "" 0 "" 0
+Bp2=_ 0 "EMUL_CODE" "{$PROJ_DIR$\..\application\main.c}.43.1" 0 0 1 "" 0 "" 0
+Count=3
 [Aliases]
 Count=0
 SuppressDialog=0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""

@@ -40,7 +40,27 @@ the 1ms period.
 ***********************************************************************************************************************/
 
 void main(void)
-{
+{ 
+  typedef struct
+ {
+   u8 u8Counter;
+   void *psNextTestStructType;
+ }TestStructType;
+ 
+ TestStructType c;
+ TestStructType b;
+ c.u8Counter = 1;
+ b.u8Counter = 2;
+ c.psNextTestStructType = &b;
+ b.psNextTestStructType = NULL;
+ 
+ 
+ 
+ 
+ 
+  
+  
+  
   G_u32SystemFlags |= _SYSTEM_INITIALIZING;
 
   /* Low level initialization */
@@ -103,9 +123,9 @@ void main(void)
     UserApp3RunActiveState();
     
     /* System sleep*/
-    HEARTBEAT_OFF();
+   // HEARTBEAT_OFF();
     SystemSleep();
-    HEARTBEAT_ON();
+  //  HEARTBEAT_ON();
     
   } /* end while(1) main super loop */
   
