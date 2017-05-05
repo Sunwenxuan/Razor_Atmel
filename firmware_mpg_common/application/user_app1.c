@@ -211,9 +211,14 @@ static void UserApp1SM_Idle(void)
     LedBlink(RED,LED_2HZ);
     LedOff(GREEN);
   }
+  for(u8Index=0;u8Index<=u8RankNumber;u8Index++)
+  {
+    au8Password[u8Index] = 0;
+  }
     u8RankNumber = 0;
     bCheckFlag = FALSE;
     bCheckword = TRUE;
+    
  }   
    
  
