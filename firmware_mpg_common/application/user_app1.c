@@ -87,6 +87,14 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);
+  LedOff(CYAN);
+  LedOff(GREEN);
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOn(RED);
  
   /* If good initialization, set state to Idle */
   if( 1 )
@@ -121,6 +129,29 @@ void UserApp1RunActiveState(void)
   UserApp1_StateMachine();
 
 } /* end UserApp1RunActiveState */
+static u8 GetButtonValue(void)
+{ 
+  u8 u8Buttonword = 0;
+  if(WasButtonPressed(BUTTON0))
+  {
+    ButtonAcknowledge(BUTTON0);
+    u8Buttonword = 1; 
+  }
+
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    u8Buttonword = 2; 
+  }
+  
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    u8Buttonword = 3; 
+  }
+  
+  return u8Buttonword;
+}
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -136,7 +167,58 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
+  static u8 u8RankNumber = 0;
+  static u8 au8Password[10];
+  static u8 au8RealPassword[] = {1,2,3,3,2,1,1,2,2,3};
+  static u8 u8TempButtonValue = 9;
+  static u8 u8Index;
+  static bool bCheckFlag = FALSE;
+  static bool bCheckword = TRUE;
+  
+  /*input code*/
+  u8TempButtonValue = GetButtonValue();
+  if((u8TempButtonValue == 1)||(u8TempButtonValue == 2)||(u8TempButtonValue == 3))
+  {
+    au8Password[u8RankNumber]=u8TempButtonValue;
+    u8RankNumber++;
+  }
+  
+  if(WasButtonPressed(BUTTON3))
+  {
+    ButtonAcknowledge(BUTTON3);
+    bCheckFlag = TRUE;
+  }
+  
+  /*check code*/
+  if(bCheckFlag == TRUE)
+ {
+    for(u8Index=0;u8Index<=u8RankNumber;u8Index++)
+    {
+      if(au8Password[u8Index]!=au8RealPassword[u8Index])
+      {
+        bCheckword = FALSE;
+        break;      
+      }
+    }   
+  /*ledblink reflction*/
+  if(bCheckword == TRUE)
+  {
+    LedBlink(GREEN,LED_2HZ);
+    LedOff(RED);
+  }
+  else
+  {
+    LedBlink(RED,LED_2HZ);
+    LedOff(GREEN);
+  }
+    u8RankNumber = 0;
+    bCheckFlag = FALSE;
+    bCheckword = TRUE;
+ }   
+   
+ 
 
+  
 } /* end UserApp1SM_Idle() */
     
 #if 0
