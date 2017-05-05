@@ -87,6 +87,14 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  LedOff(WHITE);
+  LedOff(PURPLE);
+  LedOff(BLUE);
+  LedOff(CYAN);
+  LedOff(GREEN);
+  LedOff(YELLOW);
+  LedOff(ORANGE);
+  LedOff(RED);
  
   /* If good initialization, set state to Idle */
   if( 1 )
@@ -121,6 +129,29 @@ void UserApp1RunActiveState(void)
   UserApp1_StateMachine();
 
 } /* end UserApp1RunActiveState */
+static u8 GetButtonValue(void)
+{ 
+  u8 u8Buttonword = 0;
+  if(WasButtonPressed(BUTTON0))
+  {
+    ButtonAcknowledge(BUTTON0);
+    u8Buttonword = 1; 
+  }
+
+  if(WasButtonPressed(BUTTON1))
+  {
+    ButtonAcknowledge(BUTTON1);
+    u8Buttonword = 2; 
+  }
+  
+  if(WasButtonPressed(BUTTON2))
+  {
+    ButtonAcknowledge(BUTTON2);
+    u8Buttonword = 3; 
+  }
+  
+  return u8Buttonword;
+}
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -136,7 +167,99 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
+  static u8 u8RankNumber1 = 0;
+  static u8 u8RankNumber2 = 0; 
+  static u8 au8Password[10];
+  static u8 au8RealPassword[10];
+  static u8 u8TempButtonValue1 = 9;
+  static u8 u8TempButtonValue2 = 9;
+  static u8 u8Index;
+  static bool bCheckFlag = FALSE;
+  static bool bCheckword = TRUE;
+  static bool bInputRealCodeReady = FALSE;
+  static bool bRealCodeComplete = FALSE;
+  static bool bswitch = FALSE;
+  
+  if(IsButtonHeld(BUTTON3,2000))
+  {
+    bInputRealCodeReady = TRUE;
+    ButtonAcknowledge(BUTTON3);
+  }
 
+  
+  if(bInputRealCodeReady)
+  { 
+    LedOn(RED);
+    LedOn(GREEN);
+    bswitch = TRUE;
+    u8TempButtonValue1 = GetButtonValue();
+    if((u8TempButtonValue1 == 1)||(u8TempButtonValue1 == 2)||(u8TempButtonValue1 == 3))
+    {
+      au8RealPassword[u8RankNumber1] = u8TempButtonValue1;
+      u8RankNumber1++;
+    }
+  }
+  if(bswitch)
+  {  
+    if(WasButtonPressed(BUTTON3))
+    {
+      ButtonAcknowledge(BUTTON3);
+      LedOff(RED);
+      LedOff(GREEN);
+      bRealCodeComplete = TRUE;
+      bInputRealCodeReady = FALSE;
+      bswitch = FALSE;
+      
+    }  
+  }
+  
+  if(bRealCodeComplete)
+  {
+    u8TempButtonValue2 = GetButtonValue();
+    if((u8TempButtonValue1 == 1)||(u8TempButtonValue1 == 2)||(u8TempButtonValue1 == 3))
+    {
+      au8Password[u8RankNumber2] = u8TempButtonValue2;
+      u8RankNumber2++;
+    }
+    if(WasButtonPressed(BUTTON3))  
+    {
+      ButtonAcknowledge(BUTTON3);
+      bCheckFlag = TRUE;
+    }
+    if(bCheckFlag)
+    {
+      for(u8Index = 0;u8Index<u8RankNumber2;u8Index++)
+      {
+        if(au8Password[u8Index]!=au8RealPassword[u8Index])
+        {
+          bCheckword = FALSE;
+          break;
+        }
+      }
+      if(bCheckword)
+      {
+        LedBlink(GREEN,LED_2HZ);
+        LedOff(RED);
+      }
+      else
+      {
+        LedBlink(RED,LED_2HZ);
+        LedOff(GREEN);
+      }
+      
+      bCheckFlag = FALSE;
+      bRealCodeComplete = FALSE;
+      u8RankNumber1 = 0;
+      bCheckword=TRUE;
+      for(u8Index = 0;u8Index<u8RankNumber2;u8Index++)
+      {
+        au8Password[u8Index] = 0;
+      }
+      u8RankNumber2 = 0;
+            
+    }
+  }
+    
 } /* end UserApp1SM_Idle() */
     
 #if 0
