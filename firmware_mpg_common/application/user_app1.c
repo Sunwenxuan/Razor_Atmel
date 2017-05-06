@@ -178,20 +178,29 @@ static void UserApp1SM_Idle(void)
   static bool bCheckword = TRUE;
   static bool bInputRealCodeReady = FALSE;
   static bool bRealCodeComplete = FALSE;
-  static bool bswitch = FALSE;
+  static bool blightswitch = FALSE;
   
+  //prepare to set code
   if(IsButtonHeld(BUTTON3,2000))
   {
     bInputRealCodeReady = TRUE;
     ButtonAcknowledge(BUTTON3);
+    blightswitch = TRUE;
+    bRealCodeComplete = FALSE;
+  }
+  
+  //light switch
+  if(blightswitch)
+  {
+    LedBlink(RED,LED_2HZ);
+    LedBlink(GREEN,LED_2HZ);
+     blightswitch = FALSE;
   }
 
-  
+  //start set code
   if(bInputRealCodeReady)
   { 
-    LedOn(RED);
-    LedOn(GREEN);
-    bswitch = TRUE;
+
     u8TempButtonValue1 = GetButtonValue();
     if((u8TempButtonValue1 == 1)||(u8TempButtonValue1 == 2)||(u8TempButtonValue1 == 3))
     {
@@ -199,7 +208,9 @@ static void UserApp1SM_Idle(void)
       u8RankNumber1++;
     }
   }
-  if(bswitch)
+  
+  //complete set code
+  if(bInputRealCodeReady)
   {  
     if(WasButtonPressed(BUTTON3))
     {
@@ -208,15 +219,16 @@ static void UserApp1SM_Idle(void)
       LedOff(GREEN);
       bRealCodeComplete = TRUE;
       bInputRealCodeReady = FALSE;
-      bswitch = FALSE;
-      
-    }  
-  }
+      blightswitch = FALSE;
+    } 
+  } 
   
+  
+  //check code
   if(bRealCodeComplete)
   {
     u8TempButtonValue2 = GetButtonValue();
-    if((u8TempButtonValue1 == 1)||(u8TempButtonValue1 == 2)||(u8TempButtonValue1 == 3))
+    if((u8TempButtonValue2 == 1)||(u8TempButtonValue2 == 2)||(u8TempButtonValue2 == 3))
     {
       au8Password[u8RankNumber2] = u8TempButtonValue2;
       u8RankNumber2++;
@@ -248,7 +260,6 @@ static void UserApp1SM_Idle(void)
       }
       
       bCheckFlag = FALSE;
-      bRealCodeComplete = FALSE;
       u8RankNumber1 = 0;
       bCheckword=TRUE;
       for(u8Index = 0;u8Index<u8RankNumber2;u8Index++)
