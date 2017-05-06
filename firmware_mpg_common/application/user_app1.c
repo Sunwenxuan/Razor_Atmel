@@ -187,6 +187,11 @@ static void UserApp1SM_Idle(void)
     ButtonAcknowledge(BUTTON3);
     blightswitch = TRUE;
     bRealCodeComplete = FALSE;
+    for(u8Index = 0;u8Index<u8RankNumber1;u8Index++)
+    {
+      au8RealPassword[u8Index] = 0;
+    }
+    u8RankNumber1 = 0;
   }
   
   //light switch
@@ -260,7 +265,6 @@ static void UserApp1SM_Idle(void)
       }
       
       bCheckFlag = FALSE;
-      u8RankNumber1 = 0;
       bCheckword=TRUE;
       for(u8Index = 0;u8Index<u8RankNumber2;u8Index++)
       {
