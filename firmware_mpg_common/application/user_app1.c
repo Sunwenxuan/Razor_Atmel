@@ -245,7 +245,7 @@ static void UserApp1SM_Idle(void)
     }
     if(bCheckFlag)
     {
-      for(u8Index = 0;u8Index<u8RankNumber2;u8Index++)
+      for(u8Index = 0;u8Index<u8RankNumber1;u8Index++)
       {
         if(au8Password[u8Index]!=au8RealPassword[u8Index])
         {
