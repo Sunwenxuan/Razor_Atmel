@@ -51,7 +51,8 @@ extern volatile u32 G_u32ApplicationFlags;             /* From main.c */
 
 extern volatile u32 G_u32SystemTime1ms;                /* From board-specific source file */
 extern volatile u32 G_u32SystemTime1s;                 /* From board-specific source file */
-
+extern u8 G_au8DebugScanfBuffer[];  /* From debug.c */
+extern u8 G_u8DebugScanfCharCount;  /* From debug.c */
 
 /***********************************************************************************************************************
 Global variable definitions with scope limited to this local application.
@@ -87,7 +88,73 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+  /*
+  static u32 u32Number1 = 1111;
+  static u32 u32Number2 = 0;
+  static u8 au8OutputPattern[128];
+  u8 u8Count1 = 0;
+  u8 u8Count2 = 0;
+  u8 u8Index;
+  u8 u8Index1;
+  u8 temp;
+
+  u32Number2 = u32Number1;
+  while(u32Number2)
+  {
+    u32Number2 = u32Number2/10;
+    u8Count1++;
+  }
+  
  
+  for(u8Index = 0;u8Index<(2+u8Count1);u8Index++)
+  {
+    au8OutputPattern[u8Index] = '*';  
+  }
+  au8OutputPattern[u8Index] = '\n';
+  u8Index++;
+  au8OutputPattern[u8Index] = '\r';
+  u8Index++;
+  au8OutputPattern[u8Index] = '*';
+  u8Index++;
+  
+  while(u32Number1)
+  {
+     au8OutputPattern[u8Index] = ((u32Number1%10)+0x30);
+     u32Number1 = u32Number1/10;
+     u8Index++;
+     u8Count2++;
+  }
+  
+  
+  
+  for(u8 i = 0;i<u8Count2/2;i++)
+  {
+      temp = au8OutputPattern[i+u8Index-u8Count2];
+      au8OutputPattern[i+u8Index-u8Count2] = au8OutputPattern[u8Index-i-1];
+      au8OutputPattern[u8Index-i-1] = temp;
+  }
+
+
+  au8OutputPattern[u8Index] = '*';
+  u8Index++;
+  au8OutputPattern[u8Index] = '\n';
+  u8Index++;
+  au8OutputPattern[u8Index] = '\r';
+  u8Index1 = u8Index+1;
+  for(u8Index = u8Index1;u8Index<(u8Index1+2+u8Count1);u8Index++)
+  {
+     au8OutputPattern[u8Index] = '*';  
+  }
+  au8OutputPattern[u8Index] = '\n';
+  u8Index++;
+  au8OutputPattern[u8Index] = '\r';
+  u8Index++;
+  au8OutputPattern[u8Index] = '\0';
+    
+  DebugPrintf(au8OutputPattern);
+  
+ */
+     
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -135,8 +202,161 @@ State Machine Function Definitions
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
-{
+{ 
+  static u8 au8RealName[3] = {'s','w','x'};
+  static u8 *u8p = au8RealName;
+  static u32 auInputData[100];
+  static u32 u32Number1 = 0;
+  static u32 u32Number2 = 0;
+  static u8 au8OutputPattern[128];
+  static u8 u8i = 0;
+  static u8 u8CharCount;
+  u8 u8Count1 = 0;
+  u8 u8Count2 = 0;
+  u8 u8Index;
+  u8 u8Index1;
+  u8 temp;
+  static bool bswitch1 = FALSE;
+  static bool bswitch2 = FALSE;
+  static bool bswitch3 = FALSE;  
+  static bool bswitch = TRUE;
+  extern u8 G_au8DebugScanfBuffer[]
+  
+  if(bswitch)
+  {
+    if(G_u8DebugScanfCharCount == 1)
+    {
+      if(G_au8DebugScanfBuffer[0] == *u8p)
+      {
+        u8p++;
+        u8i++;
+        bswitch1 = TRUE;
+        u8CharCount = DebugScanf(UserApp_au8UserInputBuffer);
+        UserApp_au8UserInputBuffer[u8CharCount] = '\0';
+        DebugPrintf(u8BufferMessage);
+        DebugScanf(G_au8DebugScanfBuffer);
+        bswitch = FALSE;
+      }
+      else
+      {
+        u8p = au8RealName;
+        DebugScanf(G_au8DebugScanfBuffer);
+      }
+    }
+    
+  }
 
+  
+  if(bswitch1)
+  {
+    if(G_u8DebugScanfCharCount == 1)
+    {
+      if(G_au8DebugScanfBuffer[0] == *u8p)
+      {
+        u8p++;
+        u8i++;
+        bswitch2 = TRUE;
+        bswitch1 = FALSE;
+        DebugScanf(G_au8DebugScanfBuffer);
+      }
+      else
+      {
+        u8p = au8RealName;
+        u8i = 0;
+        DebugScanf(G_au8DebugScanfBuffer);
+        bswitch = TRUE;
+      }   
+    }
+  }
+  
+  
+  if(bswitch2)
+  {
+    if(G_u8DebugScanfCharCount == 1)
+    {
+      if(G_au8DebugScanfBuffer[0] == *u8p)
+      {
+        u8p = au8RealName;
+        u8i++;
+        bswitch2 = FALSE;
+        DebugScanf(G_au8DebugScanfBuffer);
+      }
+      else
+      {
+        u8p = au8RealName;
+        u8i = 0;
+        DebugScanf(G_au8DebugScanfBuffer);
+        bswitch = TRUE;      
+      }
+      if(u8i == 3)
+      {
+        u32Number1++;
+        bswitch3 = TRUE;
+      }
+    }
+  }
+  
+  
+  if(bswitch3)
+  {
+    u32Number2 = u32Number1;
+    while(u32Number2)
+    {
+      u32Number2 = u32Number2/10;
+      u8Count1++;
+    }
+    
+   
+    for(u8Index = 0;u8Index<(2+u8Count1);u8Index++)
+    {
+      au8OutputPattern[u8Index] = '*';  
+    }
+    au8OutputPattern[u8Index] = '\n';
+    u8Index++;
+    au8OutputPattern[u8Index] = '\r';
+    u8Index++;
+    au8OutputPattern[u8Index] = '*';
+    u8Index++;
+    
+    while(u32Number1)
+    {
+       au8OutputPattern[u8Index] = ((u32Number1%10)+0x30);
+       u32Number1 = u32Number1/10;
+       u8Index++;
+       u8Count2++;
+    }
+    
+    
+    
+    for(u8 i = 0;i<u8Count2/2;i++)
+    {
+        temp = au8OutputPattern[i+u8Index-u8Count2];
+        au8OutputPattern[i+u8Index-u8Count2] = au8OutputPattern[u8Index-i-1];
+        au8OutputPattern[u8Index-i-1] = temp;
+    }
+
+
+    au8OutputPattern[u8Index] = '*';
+    u8Index++;
+    au8OutputPattern[u8Index] = '\n';
+    u8Index++;
+    au8OutputPattern[u8Index] = '\r';
+    u8Index1 = u8Index+1;
+    for(u8Index = u8Index1;u8Index<(u8Index1+2+u8Count1);u8Index++)
+    {
+       au8OutputPattern[u8Index] = '*';  
+    }
+    au8OutputPattern[u8Index] = '\n';
+    u8Index++;
+    au8OutputPattern[u8Index] = '\r';
+    u8Index++;
+    au8OutputPattern[u8Index] = '\0';
+      
+    DebugPrintf(au8OutputPattern);
+    bswitch3 = FALSE;
+  }
+  
+  
 } /* end UserApp1SM_Idle() */
     
 #if 0
@@ -144,6 +364,7 @@ static void UserApp1SM_Idle(void)
 /* Handle an error */
 static void UserApp1SM_Error(void)          
 {
+  
   
 } /* end UserApp1SM_Error() */
 #endif
