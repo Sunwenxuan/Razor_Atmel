@@ -87,7 +87,18 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
- 
+ /* u8 au8Message[] = "Sun Wenxuan";
+  LCDMessage(LINE1_START_ADDR, au8Message);
+  LCDClearChars(LINE1_START_ADDR + 11, 9);
+  LCDMessage(LINE2_START_ADDR + 7,"2" );
+  LCDMessage(LINE2_START_ADDR + 13,"3" );
+  LCDMessage(LINE2_START_ADDR,"1" );
+  LCDMessage(LINE2_END_ADDR,"4" ); 
+  //LCDCommand(LCD_DISPLAY_CMD);
+  //LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON);
+  //LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON|LCD_DISPLAY_CURSOR|LCD_DISPLAY_BLINK);
+  //LCDCommand(LCD_HOME_CMD);
+  //LCDCommand(LINE2_START_ADDR|10);*/
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -136,7 +147,45 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
+  static s8 s8address1 = LINE1_START_ADDR;
+  
+  
 
+  
+    if(WasButtonPressed(BUTTON0))
+    {
+      ButtonAcknowledge(BUTTON0);
+      LCDCommand(LCD_CLEAR_CMD);
+      LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON|LCD_DISPLAY_CURSOR|LCD_DISPLAY_BLINK);
+      LCDCommand(LCD_HOME_CMD);
+    }
+    
+    if(WasButtonPressed(BUTTON2))
+    { 
+      s8address1++;
+      ButtonAcknowledge(BUTTON2);
+      if(s8address1==LINE1_END_ADDR+1)
+      {
+       s8address1 = LINE1_START_ADDR;
+      }
+      LCDCommand(LCD_CLEAR_CMD);
+      LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON|LCD_DISPLAY_CURSOR|LCD_DISPLAY_BLINK);    
+      LCDCommand(LCD_ADDRESS_CMD|s8address1);  
+    }
+    
+      if(WasButtonPressed(BUTTON3))
+    { 
+      s8address1--;
+      ButtonAcknowledge(BUTTON3);
+      if(s8address1==LINE1_START_ADDR-1)
+      {
+        s8address1 = LINE1_END_ADDR;
+      }
+      LCDCommand(LCD_CLEAR_CMD);
+      LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON|LCD_DISPLAY_CURSOR|LCD_DISPLAY_BLINK);          
+      LCDCommand(LCD_ADDRESS_CMD|s8address1);
+ 
+  }
 } /* end UserApp1SM_Idle() */
     
 #if 0
