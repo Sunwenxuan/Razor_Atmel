@@ -208,7 +208,8 @@ static void UserApp1SM_Idle(void)
   static u32 auInputData[100];
   static u32 u32Number1 = 0;
   static u32 u32Number2 = 0;
-  static u8 au8OutputPattern[128];
+  static u32 u32Number3 = 0;  
+   u8 au8OutputPattern[128];
   static u8 u8i = 0;
   static u8 u8CharCount;
   u8 u8Count1 = 0;
@@ -220,7 +221,7 @@ static void UserApp1SM_Idle(void)
   static bool bswitch2 = FALSE;
   static bool bswitch3 = FALSE;  
   static bool bswitch = TRUE;
-  extern u8 G_au8DebugScanfBuffer[]
+
   
   if(bswitch)
   {
@@ -231,9 +232,6 @@ static void UserApp1SM_Idle(void)
         u8p++;
         u8i++;
         bswitch1 = TRUE;
-        u8CharCount = DebugScanf(UserApp_au8UserInputBuffer);
-        UserApp_au8UserInputBuffer[u8CharCount] = '\0';
-        DebugPrintf(u8BufferMessage);
         DebugScanf(G_au8DebugScanfBuffer);
         bswitch = FALSE;
       }
@@ -279,6 +277,7 @@ static void UserApp1SM_Idle(void)
         u8p = au8RealName;
         u8i++;
         bswitch2 = FALSE;
+        bswitch = TRUE;
         DebugScanf(G_au8DebugScanfBuffer);
       }
       else
@@ -290,8 +289,10 @@ static void UserApp1SM_Idle(void)
       }
       if(u8i == 3)
       {
+        u8i = 0;
         u32Number1++;
         bswitch3 = TRUE;
+        
       }
     }
   }
@@ -300,6 +301,7 @@ static void UserApp1SM_Idle(void)
   if(bswitch3)
   {
     u32Number2 = u32Number1;
+    u32Number3 = u32Number1;
     while(u32Number2)
     {
       u32Number2 = u32Number2/10;
@@ -318,10 +320,10 @@ static void UserApp1SM_Idle(void)
     au8OutputPattern[u8Index] = '*';
     u8Index++;
     
-    while(u32Number1)
+    while(u32Number3)
     {
-       au8OutputPattern[u8Index] = ((u32Number1%10)+0x30);
-       u32Number1 = u32Number1/10;
+       au8OutputPattern[u8Index] = ((u32Number3%10)+0x30);
+       u32Number3 = u32Number3/10;
        u8Index++;
        u8Count2++;
     }
@@ -351,7 +353,8 @@ static void UserApp1SM_Idle(void)
     au8OutputPattern[u8Index] = '\r';
     u8Index++;
     au8OutputPattern[u8Index] = '\0';
-      
+    
+    DebugLineFeed();
     DebugPrintf(au8OutputPattern);
     bswitch3 = FALSE;
   }
