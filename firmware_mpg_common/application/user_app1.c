@@ -147,45 +147,37 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 {
-  static s8 s8address1 = LINE1_START_ADDR;
+  static u8 au8InputWord[20] = {'S','u','n',' ','W','e','n','x','u','a','n',' ',' ',' ',' ',' ',' ',' ',' ',' '};
+  static u32 u32Count1=0;
+  static u8 u8Temp;
+  static u8 u8Count2;
+  static bool bswitch = TRUE;
   
-  
-
-  
-    if(WasButtonPressed(BUTTON0))
-    {
-      ButtonAcknowledge(BUTTON0);
-      LCDCommand(LCD_CLEAR_CMD);
-      LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON|LCD_DISPLAY_CURSOR|LCD_DISPLAY_BLINK);
-      LCDCommand(LCD_HOME_CMD);
-    }
-    
-    if(WasButtonPressed(BUTTON2))
-    { 
-      s8address1++;
-      ButtonAcknowledge(BUTTON2);
-      if(s8address1==LINE1_END_ADDR+1)
-      {
-       s8address1 = LINE1_START_ADDR;
-      }
-      LCDCommand(LCD_CLEAR_CMD);
-      LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON|LCD_DISPLAY_CURSOR|LCD_DISPLAY_BLINK);    
-      LCDCommand(LCD_ADDRESS_CMD|s8address1);  
-    }
-    
-      if(WasButtonPressed(BUTTON3))
-    { 
-      s8address1--;
-      ButtonAcknowledge(BUTTON3);
-      if(s8address1==LINE1_START_ADDR-1)
-      {
-        s8address1 = LINE1_END_ADDR;
-      }
-      LCDCommand(LCD_CLEAR_CMD);
-      LCDCommand(LCD_DISPLAY_CMD|LCD_DISPLAY_ON|LCD_DISPLAY_CURSOR|LCD_DISPLAY_BLINK);          
-      LCDCommand(LCD_ADDRESS_CMD|s8address1);
- 
+  if(bswitch)
+  {
+   LCDCommand(LCD_CLEAR_CMD);
+   bswitch = FALSE;
   }
+  
+  u32Count1++;
+  if(u32Count1==1)
+  {
+    LCDMessage(LINE1_START_ADDR,au8InputWord);
+    LedBlink(PURPLE,LED_2HZ);
+    u8Temp=au8InputWord[0];
+    for(u8Count2=0;u8Count2<19;u8Count2++)
+    { 
+      au8InputWord[u8Count2]=au8InputWord[u8Count2+1];
+    }
+    au8InputWord[19]=u8Temp;
+  }
+  if(u32Count1==501)
+  {
+    
+    u32Count1=0;
+  }
+
+
 } /* end UserApp1SM_Idle() */
     
 #if 0
