@@ -121,8 +121,98 @@ void UserApp1RunActiveState(void)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Private functions                                                                                                  */
 /*--------------------------------------------------------------------------------------------------------------------*/
+static u8 DebugPrintfWord1(void)
+{
+  static u8 au8HeadWord1[]="******************************************************";
+  static u8 au8HeadWord2[]="LED Programming Interface"; 
+  static u8 au8HeadWord3[]="Press 1 to program LED command sequence"; 
+  static u8 au8HeadWord4[]="Press 2 to show current USER program";
+  static u8 au8HeadWord5[]="******************************************************";
+  
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord1);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord2);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord3);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord4);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord5); 
+  DebugLineFeed();  
+}
+
+static u8 DebugPrintfWord2(void)
+{
+  static u8 au8HeadWord6[]="Enter commands as LED-ONTIME-OFFTIME and press Enter";
+  static u8 au8HeadWord7[]="Time is in milliseconds,max 100 commands";
+  static u8 au8HeadWord8[]="LED colors: R,O,Y,G,C,B,P,W";
+  static u8 au8HeadWord9[]="Example: R-100-200(Red on at 100ms and off at 200ms)";  
+  static u8 au8HeadWord10[]="Press Enter on blank line to end";   
+  
+  DebugLineFeed();
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord6);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord7);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord8);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord9);
+  DebugLineFeed();
+  DebugPrintf(au8HeadWord10);
+  DebugLineFeed();
+}
 
 
+static u8 u8ColorTransform(u8 *u8a)
+{
+  s8 s8Color;
+  if(*u8a == 'W')
+  {
+    s8Color = WHITE;
+  }
+  if(*u8a == 'P')
+  {
+    s8Color = PURPLE;
+  }
+  if(*u8a == 'B')
+  {
+    s8Color = BLUE;
+  }  
+  if(*u8a == 'C')
+  {
+    s8Color = CYAN;
+  }
+  if(*u8a == 'G')
+  {
+    s8Color = GREEN;
+  }
+  if(*u8a == 'Y')
+  {
+    s8Color = YELLOW;
+  }
+  if(*u8a == 'O')
+  {
+    s8Color = ORANGE;
+  }
+  if(*u8a == 'R')
+  {
+    s8Color = RED;
+  }
+  return s8Color;
+}
+
+static u8 u8PowersOfTen(u8 u8Counter)
+{
+  u8 u8PowersOfTenResult = 1;
+  static u8 u8i1;
+  for(u8i1 = 0;u8i1 < u8Counter-1;u8i1++)
+  {
+    u8PowersOfTenResult *= 10;
+  }
+  return u8PowersOfTenResult;
+}
 /**********************************************************************************************************************
 State Machine Function Definitions
 **********************************************************************************************************************/
@@ -131,6 +221,95 @@ State Machine Function Definitions
 /* Wait for input */
 static void UserApp1SM_Idle(void)
 {
+  static u8 *u8p = G_au8DebugScanfBuffer;
+  static bool bswitch1 = TRUE;
+  static bool bswitch2 = TRUE;
+  static bool bswitch3 = FALSE;  
+  static LedCommandType LED;  
+  static u8 u8Index = 2;
+  static u8 u8i;
+  static u8 u8Counter1 = 0;
+  static u8 u8Counter2 = 0;  
+  static u8 u8StartTime = 0;
+  static u8 u8EndTime = 0;  
+  
+  if(bswitch2)
+  {
+    DebugPrintfWord1(); 
+    bswitch2 = FALSE;
+  }
+  
+  if(bswitch1)
+  {
+    if(G_u8DebugScanfCharCount == 1)
+    {
+      if(*u8p == '1')
+      {
+        DebugPrintfWord2();
+        DebugScanf(G_au8DebugScanfBuffer);
+        bswitch1 = FALSE;
+        bswitch3 = TRUE;      
+      }
+    }
+  }
+  
+  if(bswitch3)
+  {
+    LED.eLED = u8ColorTransform(u8p);
+    while(G_au8DebugScanfBuffer[u8Index]!='-')
+    {
+      u8Index++;
+      u8Counter1++;
+    }
+    while(G_au8DebugScanfBuffer[u8Index+u8Counter1+1]!='\r')
+    {
+      u8Index++;
+      u8Counter2++;
+    }
+    for(u8i = 0;u8i < u8Counter1;u8i++)
+    {
+     u8StartTime += (G_au8DebugScanfBuffer[u8i+2]-0x30)*u8PowersOfTen(u8Counter1-u8i);  
+    }
+    LED.u32Time = u8StartTime;
+    LED.bOn = TRUE;
+    LedDisplayAddCommand(USER_LIST,&LED);
+    
+    for(u8i = 0;u8i < u8Counter2;u8i++)
+    {
+      u8EndTime += (G_au8DebugScanfBuffer[u8i+u8Index+u8Counter1+1]-0x30)*u8PowersOfTen(u8Counter2-u8i);
+    }
+    LED.u32Time = u8EndTime;
+    LED.bOn = FALSE;
+    LedDisplayAddCommand(USER_LIST,&LED);
+    
+  }
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 } /* end UserApp1SM_Idle() */
                       
