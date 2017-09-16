@@ -68,7 +68,18 @@ Function Definitions
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Public functions                                                                                                   */
 /*--------------------------------------------------------------------------------------------------------------------*/
-
+u8 AntCalculateChecksum(u8 *au8string,u8 u8length)
+{
+  
+  u8 u8CS = *au8string;
+  while(u8length>2)
+  {
+    au8string++;
+    u8CS ^= *au8string;
+    u8length--;
+  }
+  return u8CS;
+}
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* Protected functions                                                                                                */
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -87,7 +98,15 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
- 
+   u8 au8SetChannelPower[]={0xA5,2,0x47,0,4,CS};
+   u8 au8SetChannelID[]={0xA4,5,0x51,1,0xef,0x12,1,50,CS};
+   u8 au8SetChannelPowerCS;
+   u8 au8SetChannelIDCS;
+   
+   au8SetChannelPowerCS = AntCalculateChecksum(au8SetChannelPower,sizeof(au8SetChannelPower)/sizeof(au8SetChannelPower[0]));
+   au8SetChannelIDCS = AntCalculateChecksum(au8SetChannelID,sizeof(au8SetChannelID)/sizeof(au8SetChannelID[0]));
+   
+   
   /* If good initialization, set state to Idle */
   if( 1 )
   {
@@ -121,6 +140,7 @@ void UserApp1RunActiveState(void)
   UserApp1_StateMachine();
 
 } /* end UserApp1RunActiveState */
+
 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
