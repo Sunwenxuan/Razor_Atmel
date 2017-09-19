@@ -88,72 +88,7 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
-  /*
-  static u32 u32Number1 = 1111;
-  static u32 u32Number2 = 0;
-  static u8 au8OutputPattern[128];
-  u8 u8Count1 = 0;
-  u8 u8Count2 = 0;
-  u8 u8Index;
-  u8 u8Index1;
-  u8 temp;
 
-  u32Number2 = u32Number1;
-  while(u32Number2)
-  {
-    u32Number2 = u32Number2/10;
-    u8Count1++;
-  }
-  
- 
-  for(u8Index = 0;u8Index<(2+u8Count1);u8Index++)
-  {
-    au8OutputPattern[u8Index] = '*';  
-  }
-  au8OutputPattern[u8Index] = '\n';
-  u8Index++;
-  au8OutputPattern[u8Index] = '\r';
-  u8Index++;
-  au8OutputPattern[u8Index] = '*';
-  u8Index++;
-  
-  while(u32Number1)
-  {
-     au8OutputPattern[u8Index] = ((u32Number1%10)+0x30);
-     u32Number1 = u32Number1/10;
-     u8Index++;
-     u8Count2++;
-  }
-  
-  
-  
-  for(u8 i = 0;i<u8Count2/2;i++)
-  {
-      temp = au8OutputPattern[i+u8Index-u8Count2];
-      au8OutputPattern[i+u8Index-u8Count2] = au8OutputPattern[u8Index-i-1];
-      au8OutputPattern[u8Index-i-1] = temp;
-  }
-
-
-  au8OutputPattern[u8Index] = '*';
-  u8Index++;
-  au8OutputPattern[u8Index] = '\n';
-  u8Index++;
-  au8OutputPattern[u8Index] = '\r';
-  u8Index1 = u8Index+1;
-  for(u8Index = u8Index1;u8Index<(u8Index1+2+u8Count1);u8Index++)
-  {
-     au8OutputPattern[u8Index] = '*';  
-  }
-  au8OutputPattern[u8Index] = '\n';
-  u8Index++;
-  au8OutputPattern[u8Index] = '\r';
-  u8Index++;
-  au8OutputPattern[u8Index] = '\0';
-    
-  DebugPrintf(au8OutputPattern);
-  
- */
      
   /* If good initialization, set state to Idle */
   if( 1 )
@@ -203,162 +138,61 @@ State Machine Function Definitions
 /* Wait for ??? */
 static void UserApp1SM_Idle(void)
 { 
-  static u8 au8RealName[3] = {'s','w','x'};
-  static u8 *u8p = au8RealName;
-  static u32 auInputData[100];
-  static u32 u32Number1 = 0;
-  static u32 u32Number2 = 0;
-  static u32 u32Number3 = 0;  
-   u8 au8OutputPattern[128];
-  static u8 u8i = 0;
-  static u8 u8CharCount;
-  u8 u8Count1 = 0;
-  u8 u8Count2 = 0;
-  u8 u8Index;
-  u8 u8Index1;
-  u8 temp;
-  static bool bswitch1 = FALSE;
-  static bool bswitch2 = FALSE;
-  static bool bswitch3 = FALSE;  
-  static bool bswitch = TRUE;
-
+  static u8 au8Message1[]="STATE1";
+  static u8 au8Message2[]="STATE2";
+  static u8 au8string1[]="Entering state 1";
+  static u8 au8string2[]="Entering state 2";  
+  static u8 *u8p = G_au8DebugScanfBuffer;  
   
-  if(bswitch)
+  if(WasButtonPressed(BUTTON1)||(*u8p=='1'&&G_au8DebugScanfBuffer[G_u8DebugScanfCharCount-1]=='\r'))
   {
-    if(G_u8DebugScanfCharCount == 1)
-    {
-      if(G_au8DebugScanfBuffer[0] == *u8p)
-      {
-        u8p++;
-        u8i++;
-        bswitch1 = TRUE;
-        DebugScanf(G_au8DebugScanfBuffer);
-        bswitch = FALSE;
-      }
-      else
-      {
-        u8p = au8RealName;
-        DebugScanf(G_au8DebugScanfBuffer);
-      }
-    }
-    
-  }
-
-  
-  if(bswitch1)
-  {
-    if(G_u8DebugScanfCharCount == 1)
-    {
-      if(G_au8DebugScanfBuffer[0] == *u8p)
-      {
-        u8p++;
-        u8i++;
-        bswitch2 = TRUE;
-        bswitch1 = FALSE;
-        DebugScanf(G_au8DebugScanfBuffer);
-      }
-      else
-      {
-        u8p = au8RealName;
-        u8i = 0;
-        DebugScanf(G_au8DebugScanfBuffer);
-        bswitch = TRUE;
-      }   
-    }
-  }
-  
-  
-  if(bswitch2)
-  {
-    if(G_u8DebugScanfCharCount == 1)
-    {
-      if(G_au8DebugScanfBuffer[0] == *u8p)
-      {
-        u8p = au8RealName;
-        u8i++;
-        bswitch2 = FALSE;
-        bswitch = TRUE;
-        DebugScanf(G_au8DebugScanfBuffer);
-      }
-      else
-      {
-        u8p = au8RealName;
-        u8i = 0;
-        DebugScanf(G_au8DebugScanfBuffer);
-        bswitch = TRUE;      
-      }
-      if(u8i == 3)
-      {
-        u8i = 0;
-        u32Number1++;
-        bswitch3 = TRUE;
-        
-      }
-    }
-  }
-  
-  
-  if(bswitch3)
-  {
-    u32Number2 = u32Number1;
-    u32Number3 = u32Number1;
-    while(u32Number2)
-    {
-      u32Number2 = u32Number2/10;
-      u8Count1++;
-    }
-    
-   
-    for(u8Index = 0;u8Index<(2+u8Count1);u8Index++)
-    {
-      au8OutputPattern[u8Index] = '*';  
-    }
-    au8OutputPattern[u8Index] = '\n';
-    u8Index++;
-    au8OutputPattern[u8Index] = '\r';
-    u8Index++;
-    au8OutputPattern[u8Index] = '*';
-    u8Index++;
-    
-    while(u32Number3)
-    {
-       au8OutputPattern[u8Index] = ((u32Number3%10)+0x30);
-       u32Number3 = u32Number3/10;
-       u8Index++;
-       u8Count2++;
-    }
-    
-    
-    
-    for(u8 i = 0;i<u8Count2/2;i++)
-    {
-        temp = au8OutputPattern[i+u8Index-u8Count2];
-        au8OutputPattern[i+u8Index-u8Count2] = au8OutputPattern[u8Index-i-1];
-        au8OutputPattern[u8Index-i-1] = temp;
-    }
-
-
-    au8OutputPattern[u8Index] = '*';
-    u8Index++;
-    au8OutputPattern[u8Index] = '\n';
-    u8Index++;
-    au8OutputPattern[u8Index] = '\r';
-    u8Index1 = u8Index+1;
-    for(u8Index = u8Index1;u8Index<(u8Index1+2+u8Count1);u8Index++)
-    {
-       au8OutputPattern[u8Index] = '*';  
-    }
-    au8OutputPattern[u8Index] = '\n';
-    u8Index++;
-    au8OutputPattern[u8Index] = '\r';
-    u8Index++;
-    au8OutputPattern[u8Index] = '\0';
-    
+    DebugScanf(G_au8DebugScanfBuffer);
     DebugLineFeed();
-    DebugPrintf(au8OutputPattern);
-    bswitch3 = FALSE;
+    DebugPrintf(au8string1);
+    DebugLineFeed();    
+    ButtonAcknowledge(BUTTON1); 
+    LedOn(WHITE);
+    LedOn(PURPLE);
+    LedOn(BLUE);
+    LedOn(CYAN);
+    LedOn(LCD_RED);
+    LedOn(LCD_BLUE);
+    LedOff(LCD_GREEN);
+    LedOff(GREEN);
+    LedOff(YELLOW);
+    LedOff(ORANGE);
+    LedOff(RED);
+    LCDCommand(LCD_CLEAR_CMD);
+    LCDMessage(LINE1_START_ADDR,au8Message1);
+    PWMAudioOn(BUZZER1);
+    PWMAudioSetFrequency(BUZZER1,200);
   }
   
+  
+  
+  if(WasButtonPressed(BUTTON2)||(*u8p=='2'&&G_au8DebugScanfBuffer[G_u8DebugScanfCharCount-1]=='\r'))
+  {
+    DebugScanf(G_au8DebugScanfBuffer);
+    DebugLineFeed();
+    DebugPrintf(au8string2);
+    DebugLineFeed();
+    ButtonAcknowledge(BUTTON2);  
+    LedOff(WHITE);
+    LedOff(PURPLE);
+    LedOff(BLUE);
+    LedOff(CYAN);
+    LedBlink(GREEN,LED_1HZ);
+    LedBlink(YELLOW,LED_2HZ);
+    LedBlink(ORANGE,LED_4HZ);
+    LedBlink(RED,LED_8HZ);
+    LedPWM(GREEN,LED_PWM_100);
+    LedPWM(RED,LED_PWM_50);
+    LedOff(LCD_BLUE);
+    LCDCommand(LCD_CLEAR_CMD);
+    LCDMessage(LINE1_START_ADDR,au8Message2);
+    PWMAudioOff(BUZZER1);
+  }
+   
   
 } /* end UserApp1SM_Idle() */
     
